@@ -1,0 +1,9 @@
+D:\VSProjects\Rhoa\Rhoa\bin\Release\Rhoa.exe.config
+D:\VSProjects\Rhoa\Rhoa\bin\Release\Rhoa.exe
+D:\VSProjects\Rhoa\Rhoa\bin\Release\Rhoa.pdb
+D:\VSProjects\Rhoa\Rhoa\obj\Release\Rhoa.Properties.Resources.resources
+D:\VSProjects\Rhoa\Rhoa\obj\Release\Rhoa.Rhoa.resources
+D:\VSProjects\Rhoa\Rhoa\obj\Release\Rhoa.csproj.GenerateResource.Cache
+D:\VSProjects\Rhoa\Rhoa\obj\Release\Rhoa.exe
+D:\VSProjects\Rhoa\Rhoa\obj\Release\Rhoa.pdb
+D:\VSProjects\Rhoa\Rhoa\obj\Release\Rhoa.SettingsForm.resources

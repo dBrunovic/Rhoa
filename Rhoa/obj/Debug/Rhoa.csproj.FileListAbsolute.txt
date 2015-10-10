@@ -1,0 +1,10 @@
+D:\VSProjects\Rhoa\Rhoa\bin\Debug\Rhoa.exe.config
+D:\VSProjects\Rhoa\Rhoa\obj\Debug\Rhoa.csprojResolveAssemblyReference.cache
+D:\VSProjects\Rhoa\Rhoa\obj\Debug\Rhoa.Properties.Resources.resources
+D:\VSProjects\Rhoa\Rhoa\obj\Debug\Rhoa.csproj.GenerateResource.Cache
+D:\VSProjects\Rhoa\Rhoa\bin\Debug\Rhoa.exe
+D:\VSProjects\Rhoa\Rhoa\bin\Debug\Rhoa.pdb
+D:\VSProjects\Rhoa\Rhoa\obj\Debug\Rhoa.exe
+D:\VSProjects\Rhoa\Rhoa\obj\Debug\Rhoa.pdb
+D:\VSProjects\Rhoa\Rhoa\obj\Debug\Rhoa.Rhoa.resources
+D:\VSProjects\Rhoa\Rhoa\obj\Debug\Rhoa.SettingsForm.resources
