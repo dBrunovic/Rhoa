@@ -1,3 +1,10 @@
+#Download
+
+You can download the current Rhoa release from the Releases tab on this page.
+
+If you find this tool useful and want to contribute to the developer, any donation is much appreciated!
+<a href='https://pledgie.com/campaigns/30354'><img alt='Click here to lend your support to: Rhoa and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/30354.png?skin_name=chrome' border='0' ></a>
+
 # Rhoa
 Path Of Exile item searcher utilizing poe.trade
 
@@ -37,6 +44,6 @@ Currency
 # POSSIBLE ISSUES
 There have been reports of localization issues with the config file. To clarify, depending on your localization settings the parser may get confused with the decimal separator. In which case, an error will inform you of this. Try using whole numbers for now, or replacing the decimal point with ','.
 
-Please report all issues either directly to me, or to the issues section of this site. If you find this tool useful and want to contribute to the developer, any donation is much appreciated.
+Please report all issues either directly to me, or to the issues section of this site. 
 
 
