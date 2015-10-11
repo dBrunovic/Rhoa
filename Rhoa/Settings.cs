@@ -21,7 +21,7 @@ namespace Rhoa
         public bool Valid;
 
         private string path;
-        private string errorMsg = "Settings invalid, check config file, Check value of: ";
+        private string errorMsg = "Settings invalid, check config file. Check value of: ";
         public Settings()
         {
             string settingsFileName = "ConfigRhoa.cfg";
@@ -56,7 +56,7 @@ namespace Rhoa
             }
             catch
             {
-                MessageBox.Show("Invalid format of config file, please follow the default format and change just the values to valid values");
+                MessageBox.Show("Invalid format of config file, please follow the default format and change just the values to valid values, or delete the file and let Rhoa create a default config file.");
                 Valid = false;
             }
         }
@@ -84,6 +84,7 @@ namespace Rhoa
                 "MultiplyReductionBy:"+MultiplyReductionBy+" //the number by which the min values are multiplied by"+Environment.NewLine+
                 "MultiplyIncreaseBy:"+MultiplyIncreaseBy+" //the number by which the max values are multiplied by"+Environment.NewLine+
                 "InitiallyAllSelected:"+InitiallyAllSelected+" //0 for all mods to be deselected, 1 for all mods to be selected");
+                MessageBox.Show("Please restart Rhoa for the new settings to take effect.");
             }
             catch
             {
@@ -143,6 +144,7 @@ namespace Rhoa
                 this.Valid = false;
                 errorMsg += "InitiallyAllSelected ";
             }
+            errorMsg += " Try changing multiplier decimal point to ',' or putting whole numbers (Localization parsing issue)";
             if (!this.Valid)
                 MessageBox.Show(errorMsg);
         }

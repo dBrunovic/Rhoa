@@ -151,6 +151,7 @@ namespace Rhoa
             "to Cold Resistance",
             "to  Chaos Resistance",
             "to maximum Life",
+            "to Level of Socketed Minion Gems",
             "to Evasion Rating",
             "to Armour Rating",
             "increased Movement Speed",

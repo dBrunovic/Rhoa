@@ -74,6 +74,8 @@ namespace Rhoa
         private void createTotalResControl()
         {
             const int numOfElements = 3;
+            const int numOfTwoStoneRes = 2;
+
             string[] allElemRes = itemParams.Where(p => p.Contains("to Fire Resistance") || p.Contains("to Cold Resistance")
                         || p.Contains("to Lightning Resistance")).ToArray();
 
@@ -85,12 +87,21 @@ namespace Rhoa
                     totalElemRes += Int32.Parse(allElemRes[i].Split(' ')[0].Replace("+", "").Replace("%", "").Trim());
                 }   
             }
-            var toAllElemRes = itemParams.Where(p => p.Contains("to all Elemental Resistances")).FirstOrDefault();
+            var toAllElemRes = itemParams.Where(p => p.Contains("to all Elemental Resistances")).ToList();
             if (toAllElemRes != null)
             {
-                totalElemRes += Int32.Parse(toAllElemRes.Split(' ')[0].Replace("+", "").Replace("%", "").Trim()) * numOfElements;
+                foreach (var allRes in toAllElemRes)
+                {
+                    totalElemRes += Int32.Parse(allRes.Split(' ')[0].Replace("+", "").Replace("%", "").Trim()) * numOfElements;
+                }
             }
 
+            var twoStoneRes = itemParams.Where(p => p.Contains("to Fire and Lightning Resistances") || p.Contains("to Cold and Lightning Resistances")
+                || p.Contains("to Fire and Cold Resistances")).FirstOrDefault();
+            if (twoStoneRes != null)
+            {
+                totalElemRes += Int32.Parse(twoStoneRes.Split(' ')[0].Replace("+", "").Replace("%", "").Trim()) * numOfTwoStoneRes;
+            }
             addControl("Total Elem. Res: " + totalElemRes.ToString());
 
         }

@@ -1,2 +1,0 @@
-Auto hotkey
-Windowed Fullscreen

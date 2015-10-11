@@ -7,11 +7,12 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Drawing;
+using System.IO;
 
 namespace Rhoa
 {
     public partial class Rhoa : Form
-    {         
+    {
         public Rhoa()
         {
             SendKeys.SendWait("^c");
@@ -19,6 +20,7 @@ namespace Rhoa
             var startingPoint = new System.Drawing.Point(MousePosition.X, MousePosition.Y);
             Top = startingPoint.Y;
             Left = startingPoint.X;
+            FormBorderStyle = FormBorderStyle.Fixed3D;
             InitializeComponent();
         }
        

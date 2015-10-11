@@ -1,3 +1,0 @@
-+!C::
-Send ^c
-Run, WRITE_THE_PATH_TO_YOUR_RHOA.EXE_HERE
