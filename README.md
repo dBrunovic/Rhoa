@@ -26,9 +26,12 @@ Use addition or use multiplication determines whether the + and - buttons will c
 Initially all selected selects all the mods to be searched by on startup.
 
 # Currently not supported item types:
-Non unique Flasks
-Non unique Maps
-Scrolls
+Non unique Flasks,
+
+Non unique Maps,
+
+Scrolls,
+
 Currency
 
 # POSSIBLE ISSUES
