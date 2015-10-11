@@ -3,8 +3,7 @@ Path Of Exile item searcher utilizing poe.trade
 
 It is recommended to run POE in Windowed Fullscreen mode.
 
-
-SETUP:
+# SETUP:
 
 To use Rhoa, please install AutoHotKey. There is a sample script provided called "AutoHotkeyRhoa.ahk".
 
@@ -19,23 +18,22 @@ Load the script with AutoHotKey.
 
 Once in POE, hover over an item and press the key combination specified in the autohotkey script. A form will appear with the item mods loaded. Once you modified them to how you want to search, click the search button.
 
-
-
-Currently not supported item types (that I am currently aware of):
-Non unique flasks
-Maps
-Scrolls
-Currency
-
-
-SETTINGS:
+# SETTINGS:
 Under League type the name of the league as written in poe.xyz.
 
 Use addition or use multiplication determines whether the + and - buttons will change the respective value by multiplying it with the selected coefficient or adding/subtracting.
 
 Initially all selected selects all the mods to be searched by on startup.
 
+# Currently not supported item types:
+Non unique Flasks
+Non unique Maps
+Scrolls
+Currency
 
-Please report all issues either directly to me, or to the issues section of this site.
+# POSSIBLE ISSUES
+There have been reports of localization issues with the config file. To clarify, depending on your localization settings the parser may get confused with the decimal separator. In which case, an error will inform you of this. Try using whole numbers for now, or replacing the decimal point with ','.
+
+Please report all issues either directly to me, or to the issues section of this site. If you find this tool useful and want to contribute to the developer, any donation is much appreciated.
 
 
