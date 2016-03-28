@@ -2,7 +2,7 @@
 
 You can download the current Rhoa release from the Releases tab on this page:
 
-https://github.com/dBrunovic/Rhoa/releases/download/1.0/Rhoa.rar
+https://github.com/dBrunovic/Rhoa/releases/download/1.1/Rhoa.rar
 
 If you find this tool useful and want to contribute to the developer, any donation is much appreciated!
 <a href='https://pledgie.com/campaigns/30354'><img alt='Click here to lend your support to: Rhoa and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/30354.png?skin_name=chrome' border='0' ></a>
