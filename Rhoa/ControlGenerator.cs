@@ -34,7 +34,7 @@ namespace Rhoa
                 Application.Exit();
             }
             this.form = Form;
-            this.heightAdjust = Mods.ModCount(itemParams) - 1;
+            this.heightAdjust = Mods.ModCount(itemParams);
             this.url = url;
             this.generalParams = new Dictionary<string, string>();
         }
@@ -46,12 +46,13 @@ namespace Rhoa
             if (String.IsNullOrEmpty(itemBase))
             {      
                 return false;
-            }
+            }       
             generateGeneralControls();
+            createItemBaseControl();
             return true;
         }
 
-        public void addModControls()
+        private void addModControls()
         {
             for (int i = itemParams.Count() - 1; i >= 0; i--)
             {
@@ -60,7 +61,7 @@ namespace Rhoa
             addSearchButton();
         }
 
-        public void addSearchButton()
+        private void addSearchButton()
         {
             Button go = new Button();
             go.Text = "Search";
@@ -69,6 +70,50 @@ namespace Rhoa
             go.Click += new EventHandler(this.Search_Click);
             form.AcceptButton = go;
             form.Controls.Add(go);
+        }
+
+        private void createItemBaseControl()
+        {
+            int totalWidth = 0;
+            TextBox modName = new TextBox();
+            modName.Text = "Item Base";
+            modName.Name = "Item Base";
+            modName.ReadOnly = true;
+            modName.Dock = DockStyle.Top;
+            modName.MaximumSize = new Size((int)(form.Width / 1.1), modName.Height);
+            this.form.Controls.Add(modName);
+            totalWidth += modName.Width;
+
+
+            TextBox baseName = new TextBox();
+            baseName.Text = itemBase;
+            baseName.ReadOnly = true;
+            baseName.Location = new Point(modName.Width + 2, modName.Height * heightAdjust);
+            baseName.Size = new Size(170, baseName.Height);
+            totalWidth += baseName.Width;
+            this.form.Controls.Add(baseName);
+
+            //select mod to compare by
+            CheckBox checkbox = new CheckBox();
+            checkbox.Location = new Point(totalWidth + 2, modName.Height * heightAdjust);
+            checkbox.Width = 20;
+            totalWidth += checkbox.Width;
+            checkbox.Name = "cBoxBase";
+            this.form.Controls.Add(checkbox);
+            if (settings.InitiallyAllSelected != "0")
+                checkbox.Checked = true;
+        }
+
+        private void createTotalLifeControl()
+        {
+            int totalLife = 0;
+            string[] allLife = itemParams.Where(p => p.Contains("to maximum Life")).ToArray();
+            for (int i = 0; i < allLife.Count(); i++)
+            {
+                totalLife += Int32.Parse(allLife[i].Split(' ')[0].Replace("+", ""));
+            }
+            heightAdjust++;
+            addControl("Total Life: " + totalLife.ToString());
         }
 
         private void createTotalResControl()
@@ -103,7 +148,6 @@ namespace Rhoa
                 totalElemRes += Int32.Parse(twoStoneRes.Split(' ')[0].Replace("+", "").Replace("%", "").Trim()) * numOfTwoStoneRes;
             }
             addControl("Total Elem. Res: " + totalElemRes.ToString());
-
         }
 
         private void createErrorControl()
@@ -111,15 +155,29 @@ namespace Rhoa
             addControl("The selected item type is not yet supported. If it is not on the list of non supported items, please leave a message.");
         }
 
+        private void insertSeparatorLine(string name = "")
+        {
+            Label label = new Label();
+            label.Text = name;
+            label.Dock = DockStyle.Top;
+            label.BorderStyle = BorderStyle.FixedSingle;
+            label.TextAlign = ContentAlignment.MiddleLeft;
+            label.Font = new Font("Arial", 10);
+            label.Size = new Size(form.Width, label.Height);
+            form.Controls.Add(label);
+            heightAdjust--;
+        }
+
         private void generateGeneralControls()
         {
+            
             string itemType = ItemTypes.GetItemType(itemBase);
             if (itemType == "No type found")
             {
                 createErrorControl();
                 return;
             }
-
+            
             generalParams = new Dictionary<string, string>() { { "type", itemType } , {"league", settings.league}};
             //create controls   
             if (itemBase == "Gem")
@@ -154,15 +212,21 @@ namespace Rhoa
                 if (!itemParams[0].Contains("Unique"))
                 {
                     if (ItemTypes.IsWeapon(itemBase))
+                    {
                         heightAdjust += 4;
+                    }
                     if (ItemTypes.IsArmor(itemBase))
+                    {
                         heightAdjust += 4;
+                    }
                     if (ItemTypes.IsWeapon(itemBase) || ItemTypes.IsArmor(itemBase))
-                        heightAdjust += 2;
+                        heightAdjust += 4;
                     if (ItemTypes.IsBelt(itemBase) || ItemTypes.IsJewelery(itemBase))
-                        heightAdjust++;
+                    {
+                        heightAdjust+=2;
+                    }
                     if (ItemTypes.IsQuiver(itemBase))
-                        heightAdjust -= 2;
+                        heightAdjust++;
 
                     if (ItemTypes.IsWeapon(itemBase))
                     {
@@ -187,6 +251,7 @@ namespace Rhoa
                         addControl("eDPS: " + edps.ToString());
                         addControl("APS: " + aps);
                         addControl("Crit. Strike: " + crit);
+                        insertSeparatorLine("Total values:");
                         #endregion
                     }
                     else if (ItemTypes.IsArmor(itemBase))
@@ -211,11 +276,14 @@ namespace Rhoa
                         else
                             armourTotal = "0";
 
+                        createTotalLifeControl();
                         createTotalResControl();
+
 
                         addControl("Armour: " + armourTotal);
                         addControl("Evasion: " + evaTotal);
                         addControl("Energy Shield: " + shieldTotal);
+                        insertSeparatorLine("Total values:");
                         #endregion
                     }
                 }
@@ -233,14 +301,22 @@ namespace Rhoa
             if (socketsAndLinks != null)
             {
                 if (itemParams[0].Contains("Unique"))
+                {
+                    heightAdjust++;
                     heightAdjust += 2;
+                }
                 addControl("Links: " + socketsAndLinks[1]);
                 addControl("Sockets: " + socketsAndLinks[0]);
+                insertSeparatorLine("Sockets and links:");
             }
             #endregion
 
-            if (ItemTypes.IsBelt(itemBase) || ItemTypes.IsJewelery(itemBase))
+            if (ItemTypes.IsBelt(itemBase) || ItemTypes.IsJewelery(itemBase) || ItemTypes.IsQuiver(itemBase))
+            {
+                createTotalLifeControl();
                 createTotalResControl();
+                insertSeparatorLine("Total values:");
+            }
 
             if (itemBase != "Gem")
             {
@@ -313,6 +389,16 @@ namespace Rhoa
                     generalParams["totalRes_max"] = modValue;
                 return true;
             }
+            if (modName.Contains("Total Life"))
+            {
+                if (modName.Contains("min"))
+                    generalParams["totalLife_min"] = modValue;
+
+                else
+                    generalParams["totalLife_max"] = modValue;
+                return true;
+            }
+
             if (modName.Contains("Level:"))
             {
                 if (modName.Contains("min"))
@@ -361,7 +447,7 @@ namespace Rhoa
             return false;
         }
 
-        public void addControl(string param)
+        private void addControl(string param)
         {
             int totalWidth = 0;
             string modValue;
@@ -635,6 +721,23 @@ namespace Rhoa
                         boxName = box.Name.Replace("minVal", "cBox");
                     else
                         boxName = box.Name.Replace("maxVal", "cBox");
+                    
+                    if(box.Name.Contains("Item Base"))
+                    {
+                        boxName = "cBoxBase";
+                        CheckBox baseCb = this.form.Controls.Find(boxName, true).FirstOrDefault() as CheckBox;
+                        if (baseCb.Checked)
+                        {
+                            generalParams["base"] = itemBase;
+                        }
+                        else
+                        {
+                            if (generalParams.ContainsKey("base"))
+                            {
+                                generalParams.Remove("base");
+                            }
+                        }
+                    }
 
                     CheckBox checkbox = this.form.Controls.Find(boxName, true).FirstOrDefault() as CheckBox;
                     if (!checkbox.Checked)
@@ -660,7 +763,7 @@ namespace Rhoa
             ASCIIEncoding encoding = new ASCIIEncoding();
             browser.ScriptErrorsSuppressed = true;
             browser.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(searchFinished);
-
+            //other/search query header params
             browser.Navigate(url + "/search", "", encoding.GetBytes(query), "Content-Type: application/x-www-form-urlencoded");
         }
 

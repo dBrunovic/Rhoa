@@ -10,32 +10,34 @@ namespace Rhoa
 {
     public static class QueryGenerator
     {
-        private static Dictionary<string, string> AllParams = new Dictionary<string, string>(){{"league",""}, {"type",""}, {"base",""}, {"name",""}, {"dmg_min",""}, {"dmg_max",""}, {"crit_min",""}, {"crit_max",""}, {"dps_min",""},
+        private static Dictionary<string, string> AllParams = new Dictionary<string, string>(){{"league",""}, {"type",""}, {"base",""}, {"name",""}, {"dmg_min",""}, {"dmg_max",""},
+                                            {"aps_min", ""}, {"aps_max",""}, {"crit_min",""}, {"crit_max",""}, {"dps_min",""},
                                             {"dps_max",""}, {"edps_min",""}, {"edps_max",""}, {"pdps_min",""}, {"pdps_max",""}, {"armour_min",""}, {"armour_max",""}, 
                                             {"evasion_min",""},{"evasion_max",""},{"shield_min",""},{"shield_max",""},{"block_min",""},{"block_max",""},{"sockets_min",""},
                                             {"sockets_max",""}, {"link_min",""}, {"link_max",""}, {"sockets_r",""}, {"sockets_g",""}, {"sockets_b",""}, {"sockets_w",""},
                                             {"linked_r",""},{"linked_g",""},{"linked_b",""},{"linked_w",""}, {"rlevel_min",""}, {"rlevel_max",""}, {"rstr_min",""}, {"rstr_max",""},
-                                            {"rdex_min",""}, {"rdex_max",""},{"rint_min",""}, {"rint_max",""}, {"impl",""}, {"impl_min",""}, {"impl_max",""}, {"mods",""}, {"modexclude",""},
-                                            {"modmin",""}, {"modmax",""}, {"q_min",""}, {"q_max",""}, {"level_min",""}, {"level_max",""}, {"mapq_min",""}, {"mapq_max",""}, {"rarity",""},
-                                            {"seller",""}, {"thread",""}, {"time",""}, {"corrupted",""}, {"online",""}, {"buyout",""}, {"altart",""}, {"capquality","x"}, {"buyout_min",""},
-                                            {"buyout_max",""}, {"buyout_currency",""}, {"crafted",""}, {"identified",""}};
+                                            {"rdex_min",""}, {"rdex_max",""},{"rint_min",""}, {"rint_max",""},
+                                            {"q_min",""}, {"q_max",""}, {"level_min",""}, {"level_max",""}, {"mapq_min",""}, {"mapq_max",""}, {"rarity",""},
+                                            {"seller",""}, {"thread",""}, {"time",""}, {"identified",""}, {"corrupted",""}, {"online",""}, {"buyout",""}, {"altart",""}, {"capquality","x"}, {"buyout_min",""},
+                                            {"buyout_max",""}, {"buyout_currency",""}, {"crafted",""}, {"ilvl_min",""}, {"ilvl_max",""}};
 
         private static List<string> RareMods = new List<string>();
    
         public static string GenerateQuery(List<string> itemParams, List<string> queryValues, Dictionary<string,string> generalParams)
         {
-            RareMods.Add("mods=&modexclude=&modmin=&modmax=");
             if (generalParams.Count() > 0)
             {
                 if(!generalParams.ContainsKey("league"))
                 {
-                    MessageBox.Show("Query did not recieve the league name. This should never happen, please report this issue. Setting default league to Standard...");
+                    MessageBox.Show("Query did not receive the league name. This should never happen, please report this issue. Setting default league to Standard...");
                     AllParams["league"] = "Standard";
                 }
                 else
                 {
                     AllParams["league"] = generalParams["league"];
                 }
+                if (generalParams.ContainsKey("base"))
+                    AllParams["base"] = generalParams["base"];
                 if (generalParams.ContainsKey("type"))
                     AllParams["type"] = generalParams["type"];
                 if (generalParams.ContainsKey("pdps_min")) 
@@ -84,10 +86,16 @@ namespace Rhoa
                 if (generalParams.ContainsKey("armour_max"))
                     AllParams["armour_max"] = generalParams["armour_max"];
 
+                //pseudos
                 if (generalParams.ContainsKey("totalRes_min") && generalParams.ContainsKey("totalRes_max"))
                 {
-                    RareMods.Add("mods=(pseudo) +#% total Elemental Resistance&modexclude=&modmin=" + generalParams["totalRes_min"] +
-                        "&modmax="+generalParams["totalRes_max"]);
+                    RareMods.Add("mod_name=(pseudo) +#% total Elemental Resistance&mod_min=" + generalParams["totalRes_min"] +
+                        "&mod_max="+generalParams["totalRes_max"]);
+                }
+                if (generalParams.ContainsKey("totalLife_min") && generalParams.ContainsKey("totalLife_max"))
+                {
+                    RareMods.Add("mod_name=(pseudo) (total) +# to maximum Life&mod_min=" + generalParams["totalLife_min"] +
+                        "&mod_max=" + generalParams["totalLife_max"]);
                 }
             }
             StringBuilder postBuilder = new StringBuilder();
@@ -95,16 +103,16 @@ namespace Rhoa
             
             foreach (var param in AllParams)
             {
-                if (param.Key == "impl_max")
-                {
-                    
+                if (param.Key == "q_min")
+                {      
                     foreach (var rareMod in RareMods)
                     {
                         postBuilder.Append(Mods.UrlEncodeRareMod(rareMod)).Append("&");
                     }
+                    string groupParams = "group_type=And&group_min=&group_max=&group_count=" + RareMods.Count() + "&";
+                    postBuilder.Append(groupParams);
                 }
-                else
-                    postBuilder.Append(param.Key).Append("=").Append(param.Value).Append("&");
+                postBuilder.Append(param.Key).Append("=").Append(param.Value).Append("&");
             }
             
             if(postBuilder[postBuilder.Length-1] == '&')
@@ -122,13 +130,13 @@ namespace Rhoa
                     string expression = new String(param.Where(c => c!= '+' && c!='%' && c != '-' && (c < '0' || c > '9')).ToArray());
                     string prefix;
                     if (expression.Contains("Resistance"))
-                        prefix = "mods=+#%";
+                        prefix = "mod_name=+#%";
                     else if (expression.Contains("increased"))
-                        prefix = "mods=#%";
+                        prefix = "mod_name=#%";
                     else
-                        prefix = "mods=+#";
+                        prefix = "mod_name=+#";
 
-                    RareMods.Add(prefix + expression + "&modexclude=&modmin="+queryParams[modCounter+1] + "&modmax="+queryParams[modCounter]);
+                    RareMods.Add(prefix + expression + "&mod_min="+queryParams[modCounter+1] + "&mod_max="+queryParams[modCounter]);
                     modCounter += 2;
                 }           
             }

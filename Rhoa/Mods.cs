@@ -116,7 +116,7 @@ namespace Rhoa
 
         public static string UrlEncodeRareMod(string param)
         {
-            if (param.Contains("mods=&"))
+            if (param.Contains("mod_name=&") || param.Contains("group_type"))
                 return param;
             int startIndex = param.IndexOf('=') + 1;
             int endIndex = param.IndexOf('&');
@@ -149,7 +149,7 @@ namespace Rhoa
             "to Lightning Resistance",
             "to Fire Resistance",
             "to Cold Resistance",
-            "to  Chaos Resistance",
+            "to Chaos Resistance",
             "to maximum Life",
             "to Level of Socketed Minion Gems",
             "to Evasion Rating",

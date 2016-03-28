@@ -34,8 +34,6 @@ namespace Rhoa
                 return true;
             if (Wands.Contains(itemBase))
                 return true;
-            if (Bows.Contains(itemBase))
-                return true;
             return false;
         }
 
@@ -50,8 +48,6 @@ namespace Rhoa
             if (Helmets.Contains(itemBase))
                 return true;
             if (Shields.Contains(itemBase))
-                return true;
-            if (Quivers.Contains(itemBase))
                 return true;
             return false;
         }
