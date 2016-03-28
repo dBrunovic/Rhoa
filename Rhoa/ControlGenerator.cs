@@ -34,7 +34,15 @@ namespace Rhoa
                 Application.Exit();
             }
             this.form = Form;
-            this.heightAdjust = Mods.ModCount(itemParams);
+            itemBase = Mods.GetItemBase(itemParams);
+            if (itemBase == "Gem")
+            {
+                this.heightAdjust = 1;
+            }
+            else
+            {
+                this.heightAdjust = Mods.ModCount(itemParams);
+            }
             this.url = url;
             this.generalParams = new Dictionary<string, string>();
         }
@@ -42,7 +50,6 @@ namespace Rhoa
         public bool GenerateAllControls()
         {
             createSettings();
-            itemBase = Mods.GetItemBase(itemParams);
             if (String.IsNullOrEmpty(itemBase))
             {      
                 return false;
@@ -72,105 +79,8 @@ namespace Rhoa
             form.Controls.Add(go);
         }
 
-        private void createItemBaseControl()
-        {
-            int totalWidth = 0;
-            TextBox modName = new TextBox();
-            modName.Text = "Item Base";
-            modName.Name = "Item Base";
-            modName.ReadOnly = true;
-            modName.Dock = DockStyle.Top;
-            modName.MaximumSize = new Size((int)(form.Width / 1.1), modName.Height);
-            this.form.Controls.Add(modName);
-            totalWidth += modName.Width;
-
-
-            TextBox baseName = new TextBox();
-            baseName.Text = itemBase;
-            baseName.ReadOnly = true;
-            baseName.Location = new Point(modName.Width + 2, modName.Height * heightAdjust);
-            baseName.Size = new Size(170, baseName.Height);
-            totalWidth += baseName.Width;
-            this.form.Controls.Add(baseName);
-
-            //select mod to compare by
-            CheckBox checkbox = new CheckBox();
-            checkbox.Location = new Point(totalWidth + 2, modName.Height * heightAdjust);
-            checkbox.Width = 20;
-            totalWidth += checkbox.Width;
-            checkbox.Name = "cBoxBase";
-            this.form.Controls.Add(checkbox);
-            if (settings.InitiallyAllSelected != "0")
-                checkbox.Checked = true;
-        }
-
-        private void createTotalLifeControl()
-        {
-            int totalLife = 0;
-            string[] allLife = itemParams.Where(p => p.Contains("to maximum Life")).ToArray();
-            for (int i = 0; i < allLife.Count(); i++)
-            {
-                totalLife += Int32.Parse(allLife[i].Split(' ')[0].Replace("+", ""));
-            }
-            heightAdjust++;
-            addControl("Total Life: " + totalLife.ToString());
-        }
-
-        private void createTotalResControl()
-        {
-            const int numOfElements = 3;
-            const int numOfTwoStoneRes = 2;
-
-            string[] allElemRes = itemParams.Where(p => p.Contains("to Fire Resistance") || p.Contains("to Cold Resistance")
-                        || p.Contains("to Lightning Resistance")).ToArray();
-
-            int totalElemRes = 0;
-            if (allElemRes != null)
-            {
-                for (int i = 0; i < allElemRes.Length; i++)
-                {
-                    totalElemRes += Int32.Parse(allElemRes[i].Split(' ')[0].Replace("+", "").Replace("%", "").Trim());
-                }   
-            }
-            var toAllElemRes = itemParams.Where(p => p.Contains("to all Elemental Resistances")).ToList();
-            if (toAllElemRes != null)
-            {
-                foreach (var allRes in toAllElemRes)
-                {
-                    totalElemRes += Int32.Parse(allRes.Split(' ')[0].Replace("+", "").Replace("%", "").Trim()) * numOfElements;
-                }
-            }
-
-            var twoStoneRes = itemParams.Where(p => p.Contains("to Fire and Lightning Resistances") || p.Contains("to Cold and Lightning Resistances")
-                || p.Contains("to Fire and Cold Resistances")).FirstOrDefault();
-            if (twoStoneRes != null)
-            {
-                totalElemRes += Int32.Parse(twoStoneRes.Split(' ')[0].Replace("+", "").Replace("%", "").Trim()) * numOfTwoStoneRes;
-            }
-            addControl("Total Elem. Res: " + totalElemRes.ToString());
-        }
-
-        private void createErrorControl()
-        {
-            addControl("The selected item type is not yet supported. If it is not on the list of non supported items, please leave a message.");
-        }
-
-        private void insertSeparatorLine(string name = "")
-        {
-            Label label = new Label();
-            label.Text = name;
-            label.Dock = DockStyle.Top;
-            label.BorderStyle = BorderStyle.FixedSingle;
-            label.TextAlign = ContentAlignment.MiddleLeft;
-            label.Font = new Font("Arial", 10);
-            label.Size = new Size(form.Width, label.Height);
-            form.Controls.Add(label);
-            heightAdjust--;
-        }
-
         private void generateGeneralControls()
-        {
-            
+        { 
             string itemType = ItemTypes.GetItemType(itemBase);
             if (itemType == "No type found")
             {
@@ -776,6 +686,102 @@ namespace Rhoa
             Application.Exit();
         }
         #endregion
+
+        private void createItemBaseControl()
+        {
+            int totalWidth = 0;
+            TextBox modName = new TextBox();
+            modName.Text = "Item Base";
+            modName.Name = "Item Base";
+            modName.ReadOnly = true;
+            modName.Dock = DockStyle.Top;
+            modName.MaximumSize = new Size((int)(form.Width / 1.1), modName.Height);
+            this.form.Controls.Add(modName);
+            totalWidth += modName.Width;
+
+
+            TextBox baseName = new TextBox();
+            baseName.Text = itemBase;
+            baseName.ReadOnly = true;
+            baseName.Location = new Point(modName.Width + 2, modName.Height * heightAdjust);
+            baseName.Size = new Size(170, baseName.Height);
+            totalWidth += baseName.Width;
+            this.form.Controls.Add(baseName);
+
+            //select mod to compare by
+            CheckBox checkbox = new CheckBox();
+            checkbox.Location = new Point(totalWidth + 2, modName.Height * heightAdjust);
+            checkbox.Width = 20;
+            totalWidth += checkbox.Width;
+            checkbox.Name = "cBoxBase";
+            this.form.Controls.Add(checkbox);
+            if (settings.InitiallyAllSelected != "0")
+                checkbox.Checked = true;
+        }
+
+        private void createTotalLifeControl()
+        {
+            int totalLife = 0;
+            string[] allLife = itemParams.Where(p => p.Contains("to maximum Life")).ToArray();
+            for (int i = 0; i < allLife.Count(); i++)
+            {
+                totalLife += Int32.Parse(allLife[i].Split(' ')[0].Replace("+", ""));
+            }
+            heightAdjust++;
+            addControl("Total Life: " + totalLife.ToString());
+        }
+
+        private void createTotalResControl()
+        {
+            const int numOfElements = 3;
+            const int numOfTwoStoneRes = 2;
+
+            string[] allElemRes = itemParams.Where(p => p.Contains("to Fire Resistance") || p.Contains("to Cold Resistance")
+                        || p.Contains("to Lightning Resistance")).ToArray();
+
+            int totalElemRes = 0;
+            if (allElemRes != null)
+            {
+                for (int i = 0; i < allElemRes.Length; i++)
+                {
+                    totalElemRes += Int32.Parse(allElemRes[i].Split(' ')[0].Replace("+", "").Replace("%", "").Trim());
+                }
+            }
+            var toAllElemRes = itemParams.Where(p => p.Contains("to all Elemental Resistances")).ToList();
+            if (toAllElemRes != null)
+            {
+                foreach (var allRes in toAllElemRes)
+                {
+                    totalElemRes += Int32.Parse(allRes.Split(' ')[0].Replace("+", "").Replace("%", "").Trim()) * numOfElements;
+                }
+            }
+
+            var twoStoneRes = itemParams.Where(p => p.Contains("to Fire and Lightning Resistances") || p.Contains("to Cold and Lightning Resistances")
+                || p.Contains("to Fire and Cold Resistances")).FirstOrDefault();
+            if (twoStoneRes != null)
+            {
+                totalElemRes += Int32.Parse(twoStoneRes.Split(' ')[0].Replace("+", "").Replace("%", "").Trim()) * numOfTwoStoneRes;
+            }
+            addControl("Total Elem. Res: " + totalElemRes.ToString());
+        }
+
+        private void createErrorControl()
+        {
+            addControl("The selected item type is not yet supported. If it is not on the list of non supported items, please leave a message.");
+        }
+
+        private void insertSeparatorLine(string name = "")
+        {
+            Label label = new Label();
+            label.Text = name;
+            label.Dock = DockStyle.Top;
+            label.BorderStyle = BorderStyle.FixedSingle;
+            label.TextAlign = ContentAlignment.MiddleLeft;
+            label.Font = new Font("Arial", 10);
+            label.Size = new Size(form.Width, label.Height);
+            form.Controls.Add(label);
+            heightAdjust--;
+        }
 
         private bool IsIncrementOne(string boxName, string boxValue)
         {

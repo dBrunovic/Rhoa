@@ -85,7 +85,6 @@ namespace Rhoa
                     AllParams["armour_min"] = generalParams["armour_min"];
                 if (generalParams.ContainsKey("armour_max"))
                     AllParams["armour_max"] = generalParams["armour_max"];
-
                 //pseudos
                 if (generalParams.ContainsKey("totalRes_min") && generalParams.ContainsKey("totalRes_max"))
                 {
